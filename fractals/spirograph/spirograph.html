@@ -25,6 +25,22 @@
                     <div class="option" onclick=set_multi()>Multi</div>
                 </div>
             </div>
+            <div class="preset_container">
+                <div class="preset_option" onclick=cross_fractal()>Cross Fractal</div>
+                <div class="preset_option" onclick=donut()>3D Donut</div>
+                <div class="preset_option" onclick=star()>3D Star</div>
+                <div class="preset_option" onclick=nucleus()>Nucleus</div>
+                <div class="preset_option" onclick=star_fractal()>Star Fractal</div>
+                <div class="preset_option">Custom</div>
+            </div>
+            <div class="dropdown" style="top: 10px; right: 80px;">
+                <button class="dropdown_button">Speed</button>
+                <div class="dropdown_list">
+                    <div class="option" onclick=set_slow()>Slow</div>
+                    <div class="option" onclick=set_medium()>Medium</div>
+                    <div class="option" onclick=set_fast()>Fast</div>
+                </div>
+            </div>
         </div>
         <script defer src="./spirograph.js"></script>
     </body>

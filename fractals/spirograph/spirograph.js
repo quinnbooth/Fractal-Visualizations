@@ -68,6 +68,9 @@ var colors = [255, 0, 0];
 var color_tracker = [1, -1, -1];
 var rainbow = false;
 
+// For aborting old draw commands when new fractal/speed is requested
+var draw_num = 0;
+
 // Color options
 function set_red() {
     colors = [255, 0, 0];
@@ -82,6 +85,58 @@ function set_white() {
 function set_multi() {
     colors = [255, 50, 0];
     rainbow = true;
+}
+
+// Fractal options
+function cross_fractal() {
+    fit();
+    steps = [40000, 10000, 10000, 1000, 500, 100, 10];
+    create_circles(steps.length, steps);
+    draw_fractal(40000, speed);
+}
+
+function donut() {
+    fit();
+    steps = [500, 20000, 500, 500, 500];
+    create_circles(steps.length, steps);
+    draw_fractal(20000, speed);
+}
+
+function star() {
+    fit();
+    steps = [500, 1000, 20000];
+    create_circles(steps.length, steps);
+    draw_fractal(20000, speed);
+}
+
+function nucleus() {
+    fit();
+    steps = [100000, 1600, 800, 400, 200, 100, 10];
+    create_circles(steps.length, steps);
+    draw_fractal(100000, speed);
+}
+
+function star_fractal() {
+    fit();
+    steps = [40000, 10000, 20000, 1000, 500, 100, 10];
+    create_circles(steps.length, steps);
+    draw_fractal(40000, speed);
+}
+
+// Speed Options
+function set_slow() {
+    draw_num++;
+    speed = 10;
+}
+
+function set_medium() {
+    draw_num++;
+    speed = 1;
+}
+
+function set_fast() {
+    draw_num++;
+    speed = 0.1;
 }
 
 // Controls the rotation and placement of each ccircle
@@ -108,6 +163,7 @@ class Circle {
         this.y_connect = this.y;
     }
 
+    // Determines where center of circle should be based on parent info
     get_coords() {
         if (this.parent) {
             this.x = this.parent.x_connect + this.radius * Math.cos(-1 * this.parent.angle);
@@ -115,6 +171,7 @@ class Circle {
         }
     }
 
+    // Draws circle
     draw() {
         ctx.strokeStyle = this.color;
         ctx.beginPath();
@@ -123,6 +180,7 @@ class Circle {
         ctx.closePath();
     }
 
+    // Determines next coordinates where child circle should connect
     trace() {
         this.x_connect = this.x + this.radius * Math.cos(this.angle);
         this.y_connect = this.y + this.radius * Math.sin(this.angle);
@@ -133,10 +191,12 @@ class Circle {
 
 // Runs a number of steps of the fractal algorithm
 function draw_fractal(iterations, delay) {
+    draw_num++;
+    let test_num = draw_num;
     for (let i = 0; i < iterations; i++) {
       (function (i) {
         setTimeout(function () {
-          move_circles(i, iterations, function () {
+          move_circles(test_num, i, iterations, function () {
             if (i === iterations - 1) {
                 setTimeout(clear_circles, 10);
             }
@@ -161,7 +221,10 @@ function change_color() {
 }
   
 // Moves each circle by one step in their rotation and plots the fractal
-function move_circles(i, iterations, callback) {
+function move_circles(num, i, iterations, callback) {
+
+    if (num != draw_num) return;
+
     ctx.fillStyle = "#0E0B16";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < circles.length; i++) {
@@ -182,6 +245,7 @@ function create_circles(num_of_circles, steps) {
     let current_circle = null;
     let radius = canvas.width / 6;
     let color = "#FFFFFF";
+    circles = [];
 
     for (let i = 0; i < num_of_circles; i++) {
         let circle = new Circle(current_circle, radius, color, steps[i]);
@@ -194,22 +258,12 @@ function create_circles(num_of_circles, steps) {
 
 }
 
-//let steps = [500, 20000, 500, 500, 500];
-//let steps = [500, 1000, 20000];
-//let steps = [16000, 100, 100];
-//let steps = [100000, 1000, 100];
-
-
-//let steps = [100000, 1600, 800, 400, 200, 100, 10];
-//let steps = [40000, 10000, 10000, 1000, 500, 100, 10];
-//let steps = [40000, 20000, 20000, 1000, 500, 100, 10];
-
-
 // Resize elements and draw initial fractal on launch
 fit();
-let steps = [80000, 20000, 10000, 5000, 1000, 500, 100, 10];
+var steps = [40000, 10000, 20000, 1000, 500, 100, 10];
+var speed = 1;
 setTimeout(function() {
     create_circles(steps.length, steps);
-    draw_fractal(Math.max.apply(null, steps), 0.1);
+    draw_fractal(40000, speed);
 }, 10);
 
