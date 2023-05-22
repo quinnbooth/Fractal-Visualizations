@@ -4,9 +4,27 @@
         <link rel="stylesheet" href="../../style.css">
     </head>
     <body>
+        <div class="back_button">BACK</div>
         <div class="canvas_container">
             <canvas id="canvas"></canvas>
             <canvas id="fractal_canvas"></canvas>
+        </div>
+        <div class="description_title">Spirograph Fractals</div>
+        <div class="description" id="description">
+            Spirograph Fractals are generated similarly to a pen and paper spirograph.
+            Circles rotate around one another to create repeating patterns. These patterns
+            are not strictly fractals as you will see. Rather, this algorithm can emulate fractals.
+            It is even better at drawing 3D images.
+        </div>
+        <div class="control_panel">
+            <div class="dropdown" style="top: 10px; left: 10px;">
+                <button class="dropdown_button">Colors</button>
+                <div class="dropdown_list">
+                    <div class="option" onclick=set_red()>Red</div>
+                    <div class="option" onclick=set_white()>White</div>
+                    <div class="option" onclick=set_multi()>Multi</div>
+                </div>
+            </div>
         </div>
         <script defer src="./spirograph.js"></script>
     </body>

@@ -1,6 +1,22 @@
+.back_button {
+    position: absolute;
+    top: 25px;
+    left: 25px;
+    height: 50px;
+    width: 100px;
+    display: flex;
+    border: 3px solid white;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    font-size: 1.25em;
+}
+
 body {
     font-family: "Times New Roman", Times, serif;
     background-color: #0E0B16;
+    display: flex;
 }
 
 canvas {
@@ -9,9 +25,89 @@ canvas {
 }
 
 .canvas_container {
-    height: 100%;
+    height: 80%;
     width: 100%;
+    bottom: 30%;
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.control_panel {
+    position: absolute;
+    top: 80%;
+    left: 0;
+    width: 100%;
+    height: 15%;
+    border-top: 3px solid white;
+    align-items: center;
+    display: flex;
+}
+
+.description_title {
+    position: absolute;
+    left: 25px;
+    top: 125px;
+    width: 200px;
+    font-size: 1.4em;
+    color: antiquewhite;
+    overflow: hidden;
+}
+
+.description {
+    position: absolute;
+    left: 25px;
+    top: 175px;
+    width: 190px;
+    height: 275px;
+    font-size: 1.1em;
+    color: antiquewhite;
+    overflow: auto;
+}
+
+.dropdown {
+    position: absolute;
+    display: inline-block;
+    width: 30px;
+}
+
+.dropdown:hover .dropdown_list {
+    display: block;
+}
+  
+.dropdown_button {
+    background-color: #0E0B16;
+    color: white;
+    padding: 10px 20px;
+    width: 100px;
+    border: 3px solid white;
+    cursor: pointer;
+}
+
+.dropdown_list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 80px;
+    background-color: antiquewhite;
+    padding: 10px;
+    display: none;
+    font-size: 0.9em;
+}
+  
+.dropdown_list option {
+    display: block;
+    color: #0E0B16;
+    padding: 5px 10px;
+    text-decoration: none;
+}
+  
+.option:hover {
+    display: block;
+    background-color: #E7DFDD;
+}
+
+.option:active {
+    display: block;
+    background-color: white;
 }
