@@ -6,22 +6,46 @@
 //#region HTML Setup
 
 const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+const ctx = canvas.getContext("2d", { willReadFrequently: true });
+const fractal_canvas = document.getElementById("fractal_canvas");
+const fractal_ctx = fractal_canvas.getContext("2d", { willReadFrequently: true });
+
+// Clear both canvases
+function reset_canvases() {
+    ctx.fillStyle = "#0E0B16";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    fractal_ctx.fillStyle = "transparent";
+    fractal_ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
 
 // Ensure canvas is square and fits on screen
 window.addEventListener('resize', function() {
+    console.log("test");
     if (window.innerWidth > window.innerHeight) {
         canvas.height = Math.floor(window.innerHeight * 0.75);
         canvas.width = canvas.height;
+        fractal_canvas.width = canvas.height;
+        fractal_canvas.height = canvas.height;
     } else {
         canvas.width = Math.floor(window.innerWidth * 0.75);
         canvas.height = canvas.width;
+        fractal_canvas.width = canvas.width;
+        fractal_canvas.height = canvas.width;
     }
+    
+    reset_canvases();
 });
 
 window.dispatchEvent(new Event('resize'));
 
 //#endregion
+
+var num_of_circles = 4;
+var current_circle = null;
+var circles = [];
+var radius = canvas.width / 3;
+var color = "#FFFFFF";
+var step = 1000;
 
 class Circle {
 
@@ -76,21 +100,18 @@ function delayed_loop(iterations, delay, func) {
     }
 }
 
-function test() {
+function draw_fractal() {
+    ctx.fillStyle = "#0E0B16";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < circles.length; i++) {
         circles[i].get_coords();
         circles[i].draw();
         circles[i].trace();
     }
+    fractal_ctx.fillStyle = "#FF0000";
+    const last_circle = circles.length - 1;
+    fractal_ctx.fillRect(circles[last_circle].x_connect, circles[last_circle].y_connect, 1, 1);
 }
-
-var num_of_circles = 4;
-var current_circle = null;
-var circles = [];
-var radius = canvas.width / 3;
-var color = "#FFFFFF";
-var step = 1000;
 
 for (let i = 0; i < num_of_circles; i++) {
     let circle = new Circle(current_circle, radius, color, step);
@@ -99,4 +120,4 @@ for (let i = 0; i < num_of_circles; i++) {
     current_circle = circle;
 }
 
-delayed_loop(1000, 5, test);
+delayed_loop(10000, 0.1, draw_fractal);
