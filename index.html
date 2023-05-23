@@ -2,9 +2,21 @@
     <head>
         <title>Fractals</title>
         <link rel="stylesheet" href="style.css">
-        <!-- Temporary redirect to current fractal in progress -->
-        <meta http-equiv="refresh" content="delay_time; URL=./fractals/spirograph/spirograph.html" />
     </head>
-    <body>
+    <body style="margin: 0; overflow: hidden;">
+        <div id="fractal">
+            <span class="fractal_text">FRACTALS</span>
+            <div style="height:10vw; width:55vw; background-color: #0E0B16;"></div>
+        </div>
+        <div id="clickone">Click One!</div>
+        <div class="fractal_display" style="top: 5px; left: 5px;" onclick=goto_spirograph()>
+            <span style="z-index: 9999; text-shadow: 0 0 30px red;">Spirograph</span>
+            <img src="./images/spirograph.PNG">
+        </div>
+        <div class="fractal_display" style="top: 5px; left: 35vw;"></div>
+        <div class="fractal_display" style="top: 5px; left: 70vw;"></div>
+        <div class="fractal_display" style="bottom: 5px;"></div>
+        <div class="fractal_display" style="bottom: 5px; left: 70vw;"></div>
+        <script defer src="./main.js"></script>
     </body>
 </html>

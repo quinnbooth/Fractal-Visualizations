@@ -4,10 +4,39 @@
         <link rel="stylesheet" href="../../style.css">
     </head>
     <body>
-        <div class="back_button">BACK</div>
+        <div class="back_button" id="back_button">BACK</div>
         <div class="canvas_container">
             <canvas id="canvas"></canvas>
             <canvas id="fractal_canvas"></canvas>
+            <div class="canvas_cover" id="canvas_cover">
+                <div class="back_button" style="border: 2px solid black; color: black;" onclick=custom()>CLOSE</div>
+                <div id="circle_count" style="position: absolute; color: black; top: 30px; left: 150px; white-space: nowrap;">Use up to Circle: 7</div>
+                <input class="slider" type="range" id="slider" min="1" max="7" step="1" value="7" style="top: 60px; left: 150px;">
+                <div class="input_column">
+                    <input id="circle1" type="number" min="10" max="40000" value="40000">
+                    <input id="circle2" type="number" min="10" max="40000" value="10000">
+                    <input id="circle3" type="number" min="10" max="40000" value="20000">
+                    <input id="circle4" type="number" min="10" max="40000" value="1000">
+                    <input id="circle5"type="number" min="10" max="40000" value="500">
+                    <input id="circle6" type="number" min="10" max="40000" value="100">
+                    <input id="circle7" type="number" min="10" max="40000" value="10">
+                </div>
+                <div class="input_column" style="top: 102px; left: 200px; overflow: hidden;">
+                    <div style="margin-bottom: 13px; white-space: nowrap;">Circle 1 (largest)</div>
+                    <div style="margin-bottom: 13px;">Circle 2</div>
+                    <div style="margin-bottom: 13px;">Circle 3</div>
+                    <div style="margin-bottom: 13px;">Circle 4</div>
+                    <div style="margin-bottom: 13px;">Circle 5</div>
+                    <div style="margin-bottom: 13px;">Circle 6</div>
+                    <div style="margin-bottom: 13px; white-space: nowrap;">Circle 7 (smallest)</div>
+                    <div style="margin-bottom: 13px; white-space: nowrap;">
+                        Suggestion: make circle values<br>multiples of one another. Inputs<br>
+                        less than 10 are set to 10. Inputs<br>above 40000 are set to 40000.<br>
+                        40000 steps of the image will<br>be drawn.
+                    </div>
+                </div>
+                <div class="back_button" style="position: absolute; top: 330px; border: 2px solid black; color: black;" onclick=run_custom()>RUN</div>
+            </div>
         </div>
         <div class="description_title">Spirograph Fractals</div>
         <div class="description" id="description">
@@ -26,19 +55,19 @@
                 </div>
             </div>
             <div class="preset_container">
-                <div class="preset_option" onclick=cross_fractal()>Cross Fractal</div>
+                <div class="preset_option" onclick=cross_fractal()>X Fractal</div>
                 <div class="preset_option" onclick=donut()>3D Donut</div>
                 <div class="preset_option" onclick=star()>3D Star</div>
                 <div class="preset_option" onclick=nucleus()>Nucleus</div>
                 <div class="preset_option" onclick=star_fractal()>Star Fractal</div>
-                <div class="preset_option">Custom</div>
+                <div class="preset_option" onclick=custom()>Custom</div>
             </div>
             <div class="dropdown" style="top: 10px; right: 80px;">
                 <button class="dropdown_button">Speed</button>
                 <div class="dropdown_list">
-                    <div class="option" onclick=set_slow()>Slow</div>
-                    <div class="option" onclick=set_medium()>Medium</div>
-                    <div class="option" onclick=set_fast()>Fast</div>
+                    <div class="option" onclick="(() => set_speed(10))()">Slow</div>
+                    <div class="option" onclick="(() => set_speed(1))()">Medium</div>
+                    <div class="option" onclick="(() => set_speed(0.1))()">Fast</div>
                 </div>
             </div>
         </div>
