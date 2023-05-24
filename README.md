@@ -14,6 +14,8 @@ Visit: https://quinnbooth.github.io/Fractal-Visualizations/
   <em>Figure 2: Barnsley Fern.</em>
 </p>
 
+<!-- Maybe put 4 fractals in 2x2 grid orientation and spirograph centered right below? -->
+
 ## Author
 
 👨‍💻 **Quinn Booth** - `qab2004@columbia.edu`

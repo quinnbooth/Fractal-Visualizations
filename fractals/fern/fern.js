@@ -10,6 +10,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const back_button = document.getElementById("back_button");
 const description = document.getElementById("description");
+const color_picker = document.getElementById('color_picker');
 
 // Enable re-direct to home page
 back_button.addEventListener("click", function() {
@@ -39,35 +40,100 @@ function fit() {
     reset_canvas();
 }
 
+// Allow user to pick a color for their fractals
+color_picker.addEventListener('change', function(event) {
+    user_color = event.target.value;
+});
+
+// Let user plot ferns by clicking on canvas
+canvas.addEventListener('click', function(event) {
+    const canvas_bounds = canvas.getBoundingClientRect();
+    const canvas_x = event.clientX - canvas_bounds.left;
+    const canvas_y = event.clientY - canvas_bounds.top;
+    //barnsley(event.clientX - canvas_bounds.left, event.clientY - canvas_bounds.top, canvas.height * 0.08, user_color, 10000, 0.1);
+    fern(user_coefficient, user_summand, user_probability, iterations, canvas_x, canvas_y, user_scale, user_color, user_speed);
+});
+
 // Resize everything upon launch and plot initial fractal
 fit();
 
 //#endregion
 
-
-// Coefficients, summands, and probabilities used to generate Barnsley Fern.
+// Coefficients, summands, and probabilities used to generate Barnsley Fern and other variants.
 // Kept as dictionaries for legibility.
 
-const coeffient = {
+const barnsley_coefficient = {
     0: [[0, 0], [0, 0.16]],
     1: [[0.85, 0.04], [-0.04, 0.85]],
     2: [[0.2, -0.26], [0.23, 0.22]],
     3: [[-0.15, 0.28], [0.26, 0.24]]
 };
 
-const summand = {
+const cyclosorus_coefficient = {
+    0: [[0, 0], [0, 0.25]],
+    1: [[0.95, 0.005], [-0.005, 0.93]],
+    2: [[0.035, -0.2], [0.16, 0.04]],
+    3: [[-0.04, 0.2], [0.16, 0.04]]
+};
+
+const tree_coefficient = {
+    0: [[0, 0], [0, 0.5]],
+    1: [[0.42, -0.42], [0.42, 0.42]],
+    2: [[0.42, 0.42], [-0.42, 0.42]],
+    3: [[0.1, 0], [0, 0.1]]
+};
+
+const barnsley_summand = {
     0: [[0], [0]],
     1: [[0], [1.6]],
     2: [[0], [1.6]],
     3: [[0], [0.44]]
-}
+};
 
-const probability = {
+const cyclosorus_summand = {
+    0: [[0], [-0.4]],
+    1: [[-0.002], [0.5]],
+    2: [[-0.09], [0.02]],
+    3: [[0.083], [0.12]]
+};
+
+const tree_summand = {
+    0: [[0], [0]],
+    1: [[0], [0.2]],
+    2: [[0], [0.2]],
+    3: [[0], [0.2]]
+};
+
+const barnsley_probability = {
     0: 0.01,
     1: 0.85,
     2: 0.07,
     3: 0.07
-}
+};
+
+const cyclosorus_probability = {
+    0: 0.02,
+    1: 0.84,
+    2: 0.07,
+    3: 0.07
+};
+
+const tree_probability = {
+    0: 0.05,
+    1: 0.4,
+    2: 0.4,
+    3: 0.15
+};
+
+
+// User variables
+const iterations = 50000;  // 50000 is a good sweet spot
+var user_coefficient = Object.assign({}, barnsley_coefficient);
+var user_summand = Object.assign({}, barnsley_summand);
+var user_probability = Object.assign({}, barnsley_probability);
+var user_scale = canvas.height * 0.08;
+var user_speed = 0.1;
+var user_color = "green";
 
 // Create a point class so we can easily draw multiple ferns
 
@@ -139,9 +205,7 @@ function multiply_matrix(m1, m2) {
 
 // Implement a function that executes the Barnsley Fern algorithm and draws on the canvas
 
-function fern(coefficients, summands, probabilities, iterations, x, y, scale, color) {
-
-    ctx.fillStyle = color;
+function fern(coefficients, summands, probabilities, iterations, x, y, scale, color, delay) {
 
     const buckets = {
         0: probabilities[0],
@@ -149,41 +213,75 @@ function fern(coefficients, summands, probabilities, iterations, x, y, scale, co
         2: probabilities[0] + probabilities[1] + probabilities[2]
     }
 
-    let n = 0;
     let point = new Point(x, y, scale);
 
-    while (n < iterations) {
+    for (let n = 0; n < iterations; n++) {
 
-        const p = Math.random();
-        let pick = 0;
-        n++;
+        (function (n) {
 
-        for (let i = 0; i < 4; i++) {
-            pick = i;
-            if (i >= buckets.length || p < buckets[i]) break;
-        }
+            setTimeout(function() {
 
-        const product_matrix = multiply_matrix(coefficients[pick], [[point.x], [point.y]]);
-        const sum_matrix = add_matrix(product_matrix, summands[pick]);
+                ctx.fillStyle = color;
+                const p = Math.random();
+                let pick = 0;
 
-        point.x = sum_matrix[0][0];
-        point.y = sum_matrix[1][0];
+                for (let i = 0; i < 4; i++) {
+                    pick = i;
+                    if (i >= buckets.length || p < buckets[i]) break;
+                }
 
-        ctx.fillRect(point.canvas_x, point.canvas_y, 1, 1);
+                const product_matrix = multiply_matrix(coefficients[pick], [[point.x], [point.y]]);
+                const sum_matrix = add_matrix(product_matrix, summands[pick]);
+
+                point.x = sum_matrix[0][0];
+                point.y = sum_matrix[1][0];
+
+                ctx.fillRect(point.canvas_x, point.canvas_y, 1, 1);
+
+            }, delay * n);
+
+        })(n);
 
     }
 }
 
-// Simplified settings for the specific Barnsley Fern
+// Simplified settings for the specific Barnsley Fern variations
 
-function barnsley(x, y, scale, color, iterations) {
-    fern(coeffient, summand, probability, iterations, x, y, scale, color);
+function barnsley(x, y, scale, color, iterations, delay) {
+    fern(barnsley_coefficient, barnsley_summand, barnsley_probability, iterations, x, y, scale, color, delay);
+}
+
+function cyclosorus(x, y, scale, color, iterations, delay) {
+    fern(cyclosorus_coefficient, cyclosorus_summand, cyclosorus_probability, iterations, x, y, scale, color, delay);
+}
+
+function tree(x, y, scale, color, iterations, delay) {
+    fern(tree_coefficient, tree_summand, tree_probability, iterations, x, y, scale, color, delay);
+}
+
+function select_barnsley() {
+    user_coefficient = Object.assign({}, barnsley_coefficient);
+    user_summand = Object.assign({}, barnsley_summand);
+    user_probability = Object.assign({}, barnsley_probability);
+}
+
+function select_cyclosorus() {
+    user_coefficient = Object.assign({}, cyclosorus_coefficient);
+    user_summand = Object.assign({}, cyclosorus_summand);
+    user_probability = Object.assign({}, cyclosorus_probability);
+}
+
+function select_tree() {
+    user_coefficient = Object.assign({}, tree_coefficient);
+    user_summand = Object.assign({}, tree_summand);
+    user_probability = Object.assign({}, tree_probability);
 }
 
 // Draw nice two-toned Barnsley Fern on boot
 
 reset_canvas();
-barnsley(canvas.width * 0.4, canvas.height * 0.9, canvas.height * 0.08, "blue", 10000);
-barnsley(canvas.width * 0.4, canvas.height * 0.9, canvas.height * 0.08, "green", 70000);
+barnsley(canvas.width * 0.4, canvas.height * 0.9, canvas.height * 0.08, "blue", 10000, 0.1);
+barnsley(canvas.width * 0.4, canvas.height * 0.9, canvas.height * 0.08, "green", 70000, 0.1);
+
 
 

@@ -194,12 +194,13 @@ canvas {
 
 .option:hover {
     display: block;
-    background-color: #E7DFDD;
+    background-color: white;
 }
 
 .option:active {
     display: block;
-    background-color: white;
+    background-color: black;
+    color: white;
 }
 
 .preset_container {
