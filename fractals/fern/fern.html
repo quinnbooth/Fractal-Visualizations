@@ -6,16 +6,17 @@
     <body>
         <div class="back_button" id="back_button">BACK</div>
         <div class="canvas_container">
-            <canvas id="canvas"></canvas>
+            <canvas id="canvas" style="top: 5%;"></canvas>
         </div>
         <div class="description_title">Barnsley Fern</div>
         <div class="description" id="description">
-            The Barnsley Fern and its variants are fractals created using 
-            probabilistic matrix operations. Points are plotted and transformed 
-            using one of four operations, repeatedly. This technique can also be 
-            used to generate fractal trees.
+            The Barnsley Fern and its variants are fractals generated via probabilistic matrix operations. 
+            A point is plotted and then its coordinates are transformed using one of the four operations below: 
+            multiplication by matrix [[A, B], [C, D]], followed by addition with [[E], [F]]. This repeats
+            until a fern-like image appears.
         </div>
-        <div class="control_panel">
+        <div class="control_panel" style="overflow: auto; scroll-behavior: smooth; top: 65%;">
+            <div class="description_title" style="top: 75px; left: 15px; width: 125px; font-size: 1.3em;">Click the box to draw ferns!</div>
             <div class="dropdown" style="top: 10px; left: 10px;">
                 <button class="dropdown_button" style="width: 120px;">PRESETS</button>
                 <div class="dropdown_list" style="width: 100px;">
@@ -24,7 +25,59 @@
                     <div class="option" onclick=select_tree()>Fractal Tree</div>
                 </div>
             </div>
-            <input type="color" id="color_picker">
+            <div class="matrix_8x5">
+
+                <div>Operation</div>
+                <div>A</div>
+                <div>B</div>
+                <div>C</div>
+                <div>D</div>
+                <div>E</div>
+                <div>F</div>
+                <div>Probability</div>
+
+                <div style="color: white;">No. 1</div>
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+
+                <div style="color: white;">No. 2</div>
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+
+                <div style="color: white;">No. 3</div>
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+
+                <div style="color: white;">No. 4</div>
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+                <input type="number" class="matrix_cell">
+ 
+            </div>
+            <div class="back_button" style="left: 10px; top: 145px; width: 114px; height: 35px; font-size: 1.1em;" onclick=user_clear()>CLEAR</div>
+            <div style="color: white; position: absolute; top: 10px; right: 7%; width: 50px; font-size: 1.3em; text-align: center;">Color:</div>
+            <input type="color" id="color_picker" value="#00FF00" style="position: absolute; top: 55px; right: 7%;">
+            <div style="color: white; position: absolute; top: 100px; right: 7%; width: 50px; font-size: 1.3em; text-align: center;">Scale:</div>
+            <input class="slider" type="range" id="slider" min="1" max="4" step="1" value="3" style="position: absolute; top: 160px; right: 6.8%; writing-mode: bt-lr; transform: rotate(-90deg); width: 50px;">
         </div>
         <script defer src="./fern.js"></script>
     </body>
