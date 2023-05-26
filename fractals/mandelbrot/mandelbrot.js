@@ -40,6 +40,34 @@ function fit() {
 // Resize everything upon launch and plot initial fractal
 fit();
 
+// Enable click-to-zoom on canvas
+canvas.addEventListener('click', handle_zoom);
+
+// Zooming and keeping clicked pixel in place on screen for smoothness
+function handle_zoom(event) {
+
+    const boundingRect = canvas.getBoundingClientRect();
+    const borderWidth = parseInt(getComputedStyle(canvas).borderWidth);
+    const click_x = event.clientX - boundingRect.left - borderWidth;
+    const click_y = event.clientY - boundingRect.top - borderWidth;
+
+    if (click_x > canvas.width || click_y > canvas.height) return;  // In case user clicks on border of canvas
+
+    const mapped_x = map(click_x, 0, canvas.width, loc[0] - scale, loc[0] + scale);
+    const mapped_y = map(click_y, 0, canvas.height, loc[1] - scale, loc[1] + scale);
+
+    const zoom_amount = 0.9;
+
+    loc[0] = mapped_x - (mapped_x - loc[0]) * zoom_amount;
+    loc[1] = mapped_y - (mapped_y - loc[1]) * zoom_amount;
+
+    scale *= zoom_amount;
+
+    draw_mandelbrot(loc, scale, divergence_threshold, depth);
+
+}
+
+// Map an input in a given range to another range
 function map(input, input_min, input_max, output_min, output_max) {
 
     const normalized_input = (input - input_min) / (input_max - input_min);
@@ -48,7 +76,9 @@ function map(input, input_min, input_max, output_min, output_max) {
 
 }
 
+// Plot the mandelbrot function on the canvas
 function draw_mandelbrot(location, scale, divergence_threshold, depth) {
+    
     const escape_value = divergence_threshold * divergence_threshold;
 
     for (let i = 0; i < canvas.width; i++) {
@@ -83,9 +113,6 @@ function draw_mandelbrot(location, scale, divergence_threshold, depth) {
                 const intensity = map(count, 0, depth, 0, 1);
                 const color = map(Math.sqrt(intensity), 0, 1, 0, 255);
                 ctx.fillStyle = 'rgb(' + String(color) + ', 0, ' + String(color) + ')';
-                if (color < 120) {
-                    ctx.fillStyle = "#0E0B16";
-                }
                 ctx.fillRect(i, j, 1, 1);
             }
         }
@@ -95,19 +122,9 @@ function draw_mandelbrot(location, scale, divergence_threshold, depth) {
 var loc = [-0.5, 0];
 var scale = 1.5;
 var divergence_threshold = 50;
-var depth = 50;
+var depth = 100;
 
 draw_mandelbrot(loc, scale, divergence_threshold, depth);
 
-canvas.addEventListener('click', handle_zoom);
 
-function handle_zoom(event) {
-    event.preventDefault();
 
-    console.log(event.deltaY);
-
-    const zoom_direction = 10;
-    scale += zoom_direction;
-    draw_mandelbrot(loc, scale, divergence_threshold, depth);
-
-}
