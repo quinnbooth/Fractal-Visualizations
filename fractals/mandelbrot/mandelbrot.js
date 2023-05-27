@@ -14,6 +14,10 @@ var user_color = [200, 0, 255];
 function draw_mandelbrot(location, scale, divergence_threshold, depth) {
 
     const escape_value = divergence_threshold * divergence_threshold;
+    const width = canvas.width;
+    const height = canvas.height;
+    const image_data = ctx.getImageData(0, 0, width, height);
+    const rgb = new Uint8ClampedArray(image_data.data.buffer);
 
     for (let i = 0; i < canvas.width; i++) {
         for (let j = 0; j < canvas.height; j++) {
@@ -24,42 +28,43 @@ function draw_mandelbrot(location, scale, divergence_threshold, depth) {
             let count = 0;
 
             // Initial z values (z is complex)
-            let real_output = 0;
-            let imaginary_output = 0;
+            let real = 0;
+            let imaginary = 0;
 
             // Iterate f(z) = z^2 + c for a given number of steps
             while (count < depth) {
                 
-                const real = real_output * real_output - imaginary_output * imaginary_output + real_component;
-                const imaginary = 2 * real_output * imaginary_output + imaginary_component;
-
-                real_output = real;
-                imaginary_output = imaginary;
+                const temp_real = real * real - imaginary * imaginary + real_component;
+                imaginary = 2 * real * imaginary + imaginary_component;
+                real = temp_real;
 
                 // Exit the loop early if we determine that the function has diverged
-                if (real * real + imaginary * imaginary > escape_value) {
-                    break;
-                }
-
+                if (real * real + imaginary * imaginary > escape_value) break;
+                
                 count++;
             }
 
+            const rgb_index = (i + j * width) * 4;
+  
             // Fill with black if the point is within the Mandelbrot set
             if (count == depth) {
-                ctx.fillStyle = "#000000";
-                ctx.fillRect(i, j, 1, 1);
+
+                rgb[rgb_index] = 0;
+                rgb[rgb_index + 1] = 0;
+                rgb[rgb_index + 2] = 0;
 
             // Otherwise, color it progressively more intense as it took more iterations to diverge in our loop
             } else {
-                const intensity = map(count, 0, depth, 0, 1);
-                const red = map(Math.sqrt(intensity), 0, 1, 0, user_color[0]);
-                const green = map(Math.sqrt(intensity), 0, 1, 0, user_color[1]);
-                const blue = map(Math.sqrt(intensity), 0, 1, 0, user_color[2]);
-                ctx.fillStyle = 'rgb(' + String(red) + ', ' + String(green) + ', ' + String(blue) + ')';
-                ctx.fillRect(i, j, 1, 1);
+
+                const intensity = Math.sqrt(map(count, 0, depth, 0, 1));
+                rgb[rgb_index] = intensity * user_color[0];
+                rgb[rgb_index + 1] = intensity * user_color[1];
+                rgb[rgb_index + 2] = intensity * user_color[2];
+
             }
         }
     }
+    ctx.putImageData(image_data, 0, 0);
 }
 
 // Map an input in a given range to another range

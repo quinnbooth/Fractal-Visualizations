@@ -3,6 +3,115 @@
 // Author: Quinn Booth
 //
 
+//
+// Julia Set Visualization
+// Author: Quinn Booth
+//
+
+// User variables
+var loc = [0, 0];
+var scale = 1.7;
+var divergence_threshold = 50;
+var depth = 100;
+var user_color = [255, 174, 0];
+var c = [0.285, 0];
+
+// Plot the Julia Set on the canvas
+function draw_julia(location, scale, divergence_threshold, depth, c) {
+    
+    const escape_value = divergence_threshold * divergence_threshold;
+    const width = canvas.width;
+    const height = canvas.height;
+    const image_data = ctx.getImageData(0, 0, width, height);
+    const rgb = new Uint8ClampedArray(image_data.data.buffer);
+
+    for (let i = 0; i < width; i++) {
+        for (let j = 0; j < height; j++) {
+      
+            // Get the z value for our function f(z) = z^2 + c based on our location on the canvas
+            let real = map(i, 0, canvas.width, location[0] - scale, location[0] + scale);
+            let imaginary = map(j, 0, canvas.height, location[1] - scale, location[1] + scale);
+            let count = 0;
+
+            // Iterate f(z) = z^2 + c for a given number of steps, c is a constant complex input
+            while (count < depth) {
+            
+                const r = real * real - imaginary * imaginary + c[0];
+                imaginary = 2 * real * imaginary + c[1];
+                real = r;
+
+                // Exit the loop early if we determine that the function has diverged
+                if (r * r + imaginary * imaginary > escape_value) break;
+                count++;
+            
+            }
+
+            const rgb_index = (i + j * width) * 4;
+
+            // Fill with black if the point is within the Julia Set
+            if (count == depth) {
+
+                rgb[rgb_index] = 0;
+                rgb[rgb_index + 1] = 0;
+                rgb[rgb_index + 2] = 0;
+
+            // Otherwise, color it progressively more intense as it took more iterations to diverge in our loop
+            } else {
+                const intensity = Math.sqrt(count / depth);
+                rgb[rgb_index] = intensity * user_color[0];
+                rgb[rgb_index + 1] = intensity * user_color[1];
+                rgb[rgb_index + 2] = intensity * user_color[2];
+            }
+        }
+    } 
+
+  ctx.putImageData(image_data, 0, 0);
+}
+
+// Map an input in a given range to another range
+function map(input, input_min, input_max, output_min, output_max) {
+
+    const normalized_input = (input - input_min) / (input_max - input_min);
+    const mapped_input = output_min + normalized_input * (output_max - output_min);
+    return mapped_input;
+
+}
+
+// Zooming and keeping clicked pixel in place on screen for smoothness
+function handle_zoom(event) {
+
+    // Get where the user clicked in terms of the canvas width/height coordinate system
+    const boundingRect = canvas.getBoundingClientRect();
+    const borderWidth = parseInt(getComputedStyle(canvas).borderWidth);
+    const click_x = event.clientX - boundingRect.left - borderWidth;
+    const click_y = event.clientY - boundingRect.top - borderWidth;
+    const zoom_amount = 0.8;
+
+    // In case user clicks on border of canvas
+    if (click_x > canvas.width || click_y > canvas.height) return;
+
+    // Map the user's click to the range of real/imaginary numbers represented on the canvas
+    const mapped_x = map(click_x, 0, canvas.width, loc[0] - scale, loc[0] + scale);
+    const mapped_y = map(click_y, 0, canvas.height, loc[1] - scale, loc[1] + scale);
+
+    // Move the origin
+    loc[0] = mapped_x - (mapped_x - loc[0]) * zoom_amount;
+    loc[1] = mapped_y - (mapped_y - loc[1]) * zoom_amount;
+
+    // Zoom and draw
+    scale *= zoom_amount;
+
+    draw_julia(loc, scale, divergence_threshold, depth, c);
+
+}
+
+// Go back to original fractal
+function reset_fractal() {
+    loc = [0, 0];
+    scale = 2;
+    draw_julia(loc, scale, divergence_threshold, depth);
+}
+
 // HTML elements
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -16,6 +125,19 @@ back_button.addEventListener("click", function() {
 
 // Ensure everything fits on screen when resized
 window.addEventListener('resize', fit);
+
+// Converting hex to rgb
+function get_rgb(hex) {
+    return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
+}
+
+// Allow user to pick a color for the fractals
+color_picker.addEventListener('change', function(event) {
+    const hex = event.target.value;
+    const rgb = get_rgb(hex);
+    user_color = rgb;
+    draw_julia(loc, scale, divergence_threshold, depth, c);
+});
 
 // Clear the canvas
 function reset_canvas() {
@@ -39,3 +161,43 @@ function fit() {
 
 // Resize everything upon launch and plot initial fractal
 fit();
+
+// Enable click-to-zoom on canvas
+canvas.addEventListener('click', handle_zoom);
+
+// Start julia animation when page opens
+function animate_julia(real_min, real_max, real_steps, imaginary_min, imaginary_max, imaginary_steps, loops) {
+
+    const real_step_size = (real_max - real_min) / real_steps;
+    const imaginary_step_size = (imaginary_max - imaginary_min) / imaginary_steps;
+    let real_step = real_min;
+    let imaginary_step = imaginary_min;
+    let direction = 1;
+    let count = 0;
+  
+    function animate() {
+
+        draw_julia(loc, scale, divergence_threshold, depth, [real_step, imaginary_step]);
+        real_step += real_step_size * direction;
+        imaginary_step += imaginary_step_size * direction;
+  
+        if (real_step > real_max || imaginary_step > imaginary_max) {
+            direction = direction * -1;
+        } else if (real_step < real_min || imaginary_step < imaginary_min) {
+            direction = direction * -1;
+            count++;
+            console.log(count);
+        }
+
+        if (count < loops) {
+            requestAnimationFrame(animate);
+        }
+
+    }
+  
+    animate();
+}
+  
+animate_julia(0.34, 0.4, 200, 0.34, 0.4, 200, 4);
+
+

@@ -10,12 +10,18 @@
         </div>
         <div class="description_title">Julia Set</div>
         <div class="description" id="description">
-            Spirograph Fractals are generated similarly to a pen and paper spirograph.
-            Circles rotate around one another to create repeating patterns. These patterns
-            are not strictly fractals as you will see. Rather, this algorithm can emulate fractals.
-            It is even better at drawing 3D images.
+            
         </div>
         <div class="control_panel">
+            <div style="position: absolute; top: 20px; width: 500px; font-size: 1.3em; text-align: center; color: antiquewhite; overflow: auto;">
+                Click the fractal to ZOOM!
+            </div>
+            <div style="position: absolute; top: 60px; width: 400px; font-size: 1.1em; text-align: center; color: antiquewhite; overflow: auto;">
+                All the points will be recalculated, so you can zoom in infinitely without loss of quality, unlike a PNG.
+            </div>
+            <div class="back_button" style="left: 10px; top: 10px; width: 114px; height: 35px; font-size: 1.1em;" onclick=reset_fractal()>Reset Fractal</div>
+            <div style="color: white; position: absolute; top: 65px; left: 15px; width: 50px; font-size: 1.3em; text-align: center;">Color:</div>
+            <input type="color" id="color_picker" value="#FFAE00" style="position: absolute; top: 64px; left: 80px;">
         </div>
         <script defer src="./julia.js"></script>
     </body>
