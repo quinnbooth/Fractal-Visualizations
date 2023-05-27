@@ -3,6 +3,109 @@
 // Author: Quinn Booth
 //
 
+// User variables
+var loc = [-0.5, 0];
+var scale = 1.5;
+var divergence_threshold = 50;
+var depth = 100;
+var user_color = [200, 0, 255];
+
+// Plot the mandelbrot function on the canvas
+function draw_mandelbrot(location, scale, divergence_threshold, depth) {
+
+    const escape_value = divergence_threshold * divergence_threshold;
+
+    for (let i = 0; i < canvas.width; i++) {
+        for (let j = 0; j < canvas.height; j++) {
+
+            // Get the initial c value for our function f(z) = z^2 + c
+            let real_component = map(i, 0, canvas.width, location[0] - scale, location[0] + scale);
+            let imaginary_component = map(j, 0, canvas.height, location[1] - scale, location[1] + scale);
+            let count = 0;
+
+            // Initial z values (z is complex)
+            let real_output = 0;
+            let imaginary_output = 0;
+
+            // Iterate f(z) = z^2 + c for a given number of steps
+            while (count < depth) {
+                
+                const real = real_output * real_output - imaginary_output * imaginary_output + real_component;
+                const imaginary = 2 * real_output * imaginary_output + imaginary_component;
+
+                real_output = real;
+                imaginary_output = imaginary;
+
+                // Exit the loop early if we determine that the function has diverged
+                if (real * real + imaginary * imaginary > escape_value) {
+                    break;
+                }
+
+                count++;
+            }
+
+            // Fill with black if the point is within the Mandelbrot set
+            if (count == depth) {
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(i, j, 1, 1);
+
+            // Otherwise, color it progressively more intense as it took more iterations to diverge in our loop
+            } else {
+                const intensity = map(count, 0, depth, 0, 1);
+                const red = map(Math.sqrt(intensity), 0, 1, 0, user_color[0]);
+                const green = map(Math.sqrt(intensity), 0, 1, 0, user_color[1]);
+                const blue = map(Math.sqrt(intensity), 0, 1, 0, user_color[2]);
+                ctx.fillStyle = 'rgb(' + String(red) + ', ' + String(green) + ', ' + String(blue) + ')';
+                ctx.fillRect(i, j, 1, 1);
+            }
+        }
+    }
+}
+
+// Map an input in a given range to another range
+function map(input, input_min, input_max, output_min, output_max) {
+
+    const normalized_input = (input - input_min) / (input_max - input_min);
+    const mapped_input = output_min + normalized_input * (output_max - output_min);
+    return mapped_input;
+
+}
+
+// Zooming and keeping clicked pixel in place on screen for smoothness
+function handle_zoom(event) {
+
+    // Get where the user clicked in terms of the canvas width/height coordinate system
+    const boundingRect = canvas.getBoundingClientRect();
+    const borderWidth = parseInt(getComputedStyle(canvas).borderWidth);
+    const click_x = event.clientX - boundingRect.left - borderWidth;
+    const click_y = event.clientY - boundingRect.top - borderWidth;
+    const zoom_amount = 0.8;
+
+    // In case user clicks on border of canvas
+    if (click_x > canvas.width || click_y > canvas.height) return;
+
+    // Map the user's click to the range of real/imaginary numbers represented on the canvas
+    const mapped_x = map(click_x, 0, canvas.width, loc[0] - scale, loc[0] + scale);
+    const mapped_y = map(click_y, 0, canvas.height, loc[1] - scale, loc[1] + scale);
+
+    // Move the origin
+    loc[0] = mapped_x - (mapped_x - loc[0]) * zoom_amount;
+    loc[1] = mapped_y - (mapped_y - loc[1]) * zoom_amount;
+
+    // Zoom and draw
+    scale *= zoom_amount;
+
+    draw_mandelbrot(loc, scale, divergence_threshold, depth);
+
+}
+
+// Go back to original fractal
+function reset_fractal() {
+    loc = [-0.5, 0];
+    scale = 1.5;
+    draw_mandelbrot(loc, scale, divergence_threshold, depth);
+}
+
 // HTML elements
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
@@ -16,6 +119,19 @@ back_button.addEventListener("click", function() {
 
 // Ensure everything fits on screen when resized
 window.addEventListener('resize', fit);
+
+// Converting hex to rgb
+function get_rgb(hex) {
+    return ['0x' + hex[1] + hex[2] | 0, '0x' + hex[3] + hex[4] | 0, '0x' + hex[5] + hex[6] | 0];
+}
+
+// Allow user to pick a color for the fractals
+color_picker.addEventListener('change', function(event) {
+    const hex = event.target.value;
+    const rgb = get_rgb(hex);
+    user_color = rgb;
+    draw_mandelbrot(loc, scale, divergence_threshold, depth);
+});
 
 // Clear the canvas
 function reset_canvas() {
@@ -43,87 +159,7 @@ fit();
 // Enable click-to-zoom on canvas
 canvas.addEventListener('click', handle_zoom);
 
-// Zooming and keeping clicked pixel in place on screen for smoothness
-function handle_zoom(event) {
-
-    const boundingRect = canvas.getBoundingClientRect();
-    const borderWidth = parseInt(getComputedStyle(canvas).borderWidth);
-    const click_x = event.clientX - boundingRect.left - borderWidth;
-    const click_y = event.clientY - boundingRect.top - borderWidth;
-
-    if (click_x > canvas.width || click_y > canvas.height) return;  // In case user clicks on border of canvas
-
-    const mapped_x = map(click_x, 0, canvas.width, loc[0] - scale, loc[0] + scale);
-    const mapped_y = map(click_y, 0, canvas.height, loc[1] - scale, loc[1] + scale);
-
-    const zoom_amount = 0.9;
-
-    loc[0] = mapped_x - (mapped_x - loc[0]) * zoom_amount;
-    loc[1] = mapped_y - (mapped_y - loc[1]) * zoom_amount;
-
-    scale *= zoom_amount;
-
-    draw_mandelbrot(loc, scale, divergence_threshold, depth);
-
-}
-
-// Map an input in a given range to another range
-function map(input, input_min, input_max, output_min, output_max) {
-
-    const normalized_input = (input - input_min) / (input_max - input_min);
-    const mapped_input = output_min + normalized_input * (output_max - output_min);
-    return mapped_input;
-
-}
-
-// Plot the mandelbrot function on the canvas
-function draw_mandelbrot(location, scale, divergence_threshold, depth) {
-    
-    const escape_value = divergence_threshold * divergence_threshold;
-
-    for (let i = 0; i < canvas.width; i++) {
-        for (let j = 0; j < canvas.height; j++) {
-
-            let real_component = map(i, 0, canvas.width, location[0] - scale, location[0] + scale);
-            let imaginary_component = map(j, 0, canvas.height, location[1] - scale, location[1] + scale);
-            let count = 0;
-
-            let real_output = 0;
-            let imaginary_output = 0;
-
-            while (count < depth) {
-                
-                const real = real_output * real_output - imaginary_output * imaginary_output + real_component;
-                const imaginary = 2 * real_output * imaginary_output + imaginary_component;
-
-                real_output = real;
-                imaginary_output = imaginary;
-
-                if (real * real + imaginary * imaginary > escape_value) {
-                    break;
-                }
-
-                count++;
-            }
-
-            if (count == depth) {
-                ctx.fillStyle = "#000000";
-                ctx.fillRect(i, j, 1, 1);
-            } else {
-                const intensity = map(count, 0, depth, 0, 1);
-                const color = map(Math.sqrt(intensity), 0, 1, 0, 255);
-                ctx.fillStyle = 'rgb(' + String(color) + ', 0, ' + String(color) + ')';
-                ctx.fillRect(i, j, 1, 1);
-            }
-        }
-    }
-}
-
-var loc = [-0.5, 0];
-var scale = 1.5;
-var divergence_threshold = 50;
-var depth = 100;
-
+// Draw Mandelbrot when the page opens
 draw_mandelbrot(loc, scale, divergence_threshold, depth);
 
 
