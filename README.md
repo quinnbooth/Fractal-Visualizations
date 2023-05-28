@@ -5,28 +5,30 @@ Visit: https://quinnbooth.github.io/Fractal-Visualizations/
 This project has been optimized for Google Chrome and Microsoft Edge.
 <br><br>
 
-<div style="display: flex; justify-content: center;">
-  <div style="margin-right: 20px;">
-    <img src="./images/julia.PNG" alt="Julia Set" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
-    <p align="center"><em>Figure 1: Julia Set</em></p>
-  </div>
-  <div style="margin-left: 20px;">
-    <img src="./images/mandelbrot.PNG" alt="Mandelbrot Set" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
-    <p align="center"><em>Figure 2: Mandelbrot Set</em></p>
-  </div>
-</div>
-<div style="display: flex; justify-content: center;">
-  <div style="margin-right: 20px;">
-    <img src="./images/spirograph.PNG" alt="Spirograph" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
-    <p align="center"><em>Figure 3: Spirograph</em></p>
-  </div>
-  <div style="margin-left: 20px;">
-    <img src="./images/fern.PNG" alt="Barnsley Fern" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
-    <p align="center"><em>Figure 4: Barnsley Fern</em></p>
-  </div>
-</div>
-
-<!-- Maybe put 4 fractals in 2x2 grid orientation and spirograph centered right below? -->
+<table>
+  <tr>
+    <td>
+      <img src="./images/julia.PNG" alt="Julia Set" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+      <p align="center"><em>Figure 1: Julia Set</em></p>
+    </td>
+    <td>
+      <img src="./images/mandelbrot.PNG" alt="Mandelbrot Set" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+      <p align="center"><em>Figure 2: Mandelbrot Set</em></p>
+    </td>
+  </tr>
+</table>
+<table>
+  <tr>
+    <td>
+      <img src="./images/spirograph.PNG" alt="Spirograph Fractal" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+      <p align="center"><em>Figure 3: Spirograph</em></p>
+    </td>
+    <td>
+      <img src="./images/fern.PNG" alt="Barnsley Fern" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+      <p align="center"><em>Figure 4: Barnsley Fern</em></p>
+    </td>
+  </tr>
+</table>
 
 ## Author
 
