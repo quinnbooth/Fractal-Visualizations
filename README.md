@@ -16,8 +16,7 @@ This project has been optimized for Google Chrome and Microsoft Edge.
       <p align="center"><em>Figure 2: Mandelbrot Set</em></p>
     </td>
   </tr>
-</table>
-<table>
+  <tr></tr>
   <tr>
     <td>
       <img src="./images/spirograph.PNG" alt="Spirograph Fractal" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
@@ -26,6 +25,13 @@ This project has been optimized for Google Chrome and Microsoft Edge.
     <td>
       <img src="./images/fern.PNG" alt="Barnsley Fern" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
       <p align="center"><em>Figure 4: Barnsley Fern</em></p>
+    </td>
+  </tr>
+  <tr></tr>
+  <tr>
+    <td>
+      <img src="./images/fern.PNG" alt="L-System Tree" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+      <p align="center"><em>Figure 5: L-System Tree</em></p>
     </td>
   </tr>
 </table>
