@@ -3,18 +3,17 @@
 // Author: Quinn Booth
 //
 
-//
-// Julia Set Visualization
-// Author: Quinn Booth
-//
-
-// User variables
+// Control variables
 var loc = [0, 0];
 var scale = 1.7;
 var divergence_threshold = 50;
 var depth = 100;
 var user_color = [255, 174, 0];
-var c = [0.285, 0];
+var animation_id = null;
+var c = [0.34, 0.34];
+var custom_c = [0.28, 0.01];
+var direction = 1;
+var running_custom = false;
 
 // Plot the Julia Set on the canvas
 function draw_julia(location, scale, divergence_threshold, depth, c) {
@@ -101,15 +100,23 @@ function handle_zoom(event) {
     // Zoom and draw
     scale *= zoom_amount;
 
-    draw_julia(loc, scale, divergence_threshold, depth, c);
-
+    if (running_custom) {
+        draw_julia(loc, scale, divergence_threshold, depth, custom_c);
+    } else {
+        draw_julia(loc, scale, divergence_threshold, depth, c);
+    }
 }
 
 // Go back to original fractal
 function reset_fractal() {
     loc = [0, 0];
-    scale = 2;
-    draw_julia(loc, scale, divergence_threshold, depth);
+    scale = 1.65;
+    
+    if (running_custom) {
+        draw_julia(loc, scale, divergence_threshold, depth, custom_c);
+    } else {
+        draw_julia(loc, scale, divergence_threshold, depth, c);
+    }
 }
 
 // HTML elements
@@ -117,6 +124,39 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const back_button = document.getElementById("back_button");
 const description = document.getElementById("description");
+const pause_button = document.getElementById("pause");
+const canvas_cover = document.getElementById("canvas_cover");
+const real_slider = document.getElementById("real_slider");
+const imaginary_slider = document.getElementById("imaginary_slider");
+const user_complex_num = document.getElementById("complex_num");
+
+// Get slider values to run the algorithm with the user's choice of complex number
+real_slider.addEventListener('input', slide);
+imaginary_slider.addEventListener('input', slide);
+
+function slide() {
+    running_custom = true;
+    custom_c = [parseFloat(real_slider.value), parseFloat(imaginary_slider.value)];
+    user_complex_num.textContent = real_slider.value + " + (" + imaginary_slider.value + ")i";
+    draw_julia([0, 0], 1.7, divergence_threshold, depth, custom_c);
+}
+
+// Toggle pause button between pausing and running animation
+pause_button.addEventListener("click", function() {
+    pause();
+});
+
+function pause() {
+    if (pause_button.textContent == "Pause") {
+        running_custom = false;
+        pause_button.textContent = "Run";
+        scale = 1.65;
+        cancelAnimationFrame(animation_id);
+    } else {
+        pause_button.textContent = "Pause";
+        animate_julia(0.34, 0.4, 200, 0.34, 0.4, 200, 4);
+    }
+}
 
 // Enable re-direct to home page
 back_button.addEventListener("click", function() {
@@ -159,6 +199,17 @@ function fit() {
     reset_canvas();
 }
 
+// Open and close the custom fractal menu
+function custom() {
+    if (canvas_cover.style.display == "flex") {
+        canvas_cover.style.display = "none";
+    } else {
+        canvas_cover.style.display = "flex";
+        if (pause_button.textContent == "Pause") pause();
+        slide();
+    }
+}
+
 // Resize everything upon launch and plot initial fractal
 fit();
 
@@ -166,18 +217,17 @@ fit();
 canvas.addEventListener('click', handle_zoom);
 
 // Start julia animation when page opens
-function animate_julia(real_min, real_max, real_steps, imaginary_min, imaginary_max, imaginary_steps, loops) {
+function animate_julia(real_min, real_max, real_steps, imaginary_min, imaginary_max, imaginary_steps) {
 
     const real_step_size = (real_max - real_min) / real_steps;
     const imaginary_step_size = (imaginary_max - imaginary_min) / imaginary_steps;
-    let real_step = real_min;
-    let imaginary_step = imaginary_min;
-    let direction = 1;
-    let count = 0;
+    let real_step = c[0];
+    let imaginary_step = c[1];
   
     function animate() {
 
-        draw_julia(loc, scale, divergence_threshold, depth, [real_step, imaginary_step]);
+        c = [real_step, imaginary_step];
+        draw_julia(loc, scale, divergence_threshold, depth, c);
         real_step += real_step_size * direction;
         imaginary_step += imaginary_step_size * direction;
   
@@ -185,19 +235,16 @@ function animate_julia(real_min, real_max, real_steps, imaginary_min, imaginary_
             direction = direction * -1;
         } else if (real_step < real_min || imaginary_step < imaginary_min) {
             direction = direction * -1;
-            count++;
-            console.log(count);
         }
 
-        if (count < loops) {
-            requestAnimationFrame(animate);
-        }
+        animation_id = requestAnimationFrame(animate);
 
     }
   
     animate();
 }
-  
+
+
 animate_julia(0.34, 0.4, 200, 0.34, 0.4, 200, 4);
 
 

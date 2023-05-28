@@ -252,6 +252,29 @@ function draw_fractal(iterations, delay) {
     }
 }
 
+// function draw_fractal(iterations, delay) {
+//     draw_num++;
+//     let test_num = draw_num;
+//     let i = 0;
+  
+//     function animate() {
+//       if (test_num !== draw_num) return;
+  
+//       move_circles(test_num, i, iterations, function () {
+//         if (i === iterations - 1) {
+//           setTimeout(clear_circles, 10);
+//         } else {
+//           i++;
+//           setTimeout(function () {
+//             requestAnimationFrame(animate);
+//           }, delay);
+//         }
+//       });
+//     }
+  
+//     animate();
+// }
+
 // Color options
 function set_red() {
     colors = [255, 0, 0];
