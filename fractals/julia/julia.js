@@ -153,6 +153,7 @@ function pause() {
         scale = 1.65;
         cancelAnimationFrame(animation_id);
     } else {
+        canvas_cover.style.display = "none";
         pause_button.textContent = "Pause";
         animate_julia(0.34, 0.4, 200, 0.34, 0.4, 200, 4);
     }

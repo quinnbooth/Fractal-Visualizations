@@ -8,12 +8,12 @@
         <div class="canvas_container">
             <canvas id="canvas" style="top: 10%;"></canvas>
             <div class="canvas_cover" id="canvas_cover" style="width: 100px; height: 200px; right: 0px; overflow-x: hidden; top: 0%;">
-                <div class="back_button" style="border: 2px solid black; color: black; height: 25px; width: 70px; left: 14px; top: 14px;" onclick=custom()>CLOSE</div>
-                <div style="position: absolute; color: black; top: 50px; left: 15px; white-space: nowrap;">Complex C</div>
-                <div id="complex_num" style="position: absolute; color: black; top: 75px; left: 15px; white-space: nowrap; font-size: 0.8em;">0.28 + 0.01i</div>
-                <input class="slider" type="range" id="real_slider" min="-1" max="1" step="0.01" value="0.28" style="top: 100px; left: 15px; width: 30px;">
-                <input class="slider" type="range" id="imaginary_slider" min="-1" max="1" step="0.01" value="0.01" style="top: 100px; left: 50px; width: 30px;">
-                <div style="position: absolute; color: black; top: 130px; left: 15px; white-space: nowrap; font-size: 0.8em;">Will be drawn,<br>not animated.</div>
+                <div class="back_button" id="close_button" onclick=custom()>CLOSE</div>
+                <div id="complex_label">Complex C</div>
+                <div id="complex_num">0.28 + 0.01i</div>
+                <input class="slider" type="range" id="real_slider" min="-1" max="1" step="0.01" value="0.28">
+                <input class="slider" type="range" id="imaginary_slider" min="-1" max="1" step="0.01" value="0.01">
+                <div id="complex_disclaimer">Will be drawn,<br>not animated.</div>
             </div>
         </div>
         <div class="description_title">Julia Set</div>
@@ -24,17 +24,17 @@
             part of the Julia Set.
         </div>
         <div class="control_panel">
-            <div style="position: absolute; top: 20px; width: 500px; font-size: 1.3em; text-align: center; color: antiquewhite; overflow: auto;">
+            <div id="zoom_label">
                 Click the fractal to ZOOM!
             </div>
-            <div style="position: absolute; top: 60px; width: 400px; font-size: 1.1em; text-align: center; color: antiquewhite; overflow: auto;">
+            <div id="zoom_description">
                 All the points will be recalculated, so you can zoom in infinitely without loss of quality, unlike a PNG.
             </div>
-            <div class="back_button" id="pause" style="left: unset; right: 10px; top: 10px; width: 114px; height: 35px; font-size: 1.1em;">Pause</div>
-            <div class="back_button" style="left: 10px; top: 10px; width: 114px; height: 35px; font-size: 1.1em;" onclick=reset_fractal()>Reset Zoom</div>
-            <div style="color: white; position: absolute; top: 65px; left: 15px; width: 50px; font-size: 1.3em; text-align: center;">Color:</div>
+            <div class="back_button" id="pause">Pause</div>
+            <div class="back_button" id="reset_zoom_button" onclick=reset_fractal()>Reset Zoom</div>
+            <div id="color_label3">Color:</div>
             <input type="color" id="color_picker" value="#FFAE00" style="position: absolute; top: 64px; left: 80px;">
-            <div class="back_button" style="left: unset; right: 10px; top: 60px; width: 114px; height: 35px; font-size: 1.1em;" onclick=custom()>Custom</div>
+            <div class="back_button" id="custom_button" onclick=custom()>Custom</div>
         </div>
         <script defer src="./julia.js"></script>
     </body>

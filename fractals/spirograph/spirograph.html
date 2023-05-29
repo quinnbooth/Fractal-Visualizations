@@ -10,7 +10,7 @@
             <canvas id="fractal_canvas" style="top: 10%;"></canvas>
             <div class="canvas_cover" id="canvas_cover" style="top: 10%;">
                 <div class="back_button" style="border: 2px solid black; color: black;" onclick=custom()>CLOSE</div>
-                <div id="circle_count" style="position: absolute; color: black; top: 30px; left: 150px; white-space: nowrap;">Use up to Circle: 7</div>
+                <div id="circle_count">Use up to Circle: 7</div>
                 <input class="slider" type="range" id="slider" min="1" max="7" step="1" value="7" style="top: 60px; left: 150px;">
                 <div class="input_column">
                     <input id="circle1" type="number" min="10" max="40000" value="40000">
@@ -21,7 +21,7 @@
                     <input id="circle6" type="number" min="10" max="40000" value="100">
                     <input id="circle7" type="number" min="10" max="40000" value="10">
                 </div>
-                <div class="input_column" style="top: 102px; left: 200px; overflow: hidden;">
+                <div class="input_column" style="top: 100px; left: 200px; overflow: hidden;">
                     <div style="margin-bottom: 13px; white-space: nowrap;">Circle 1 (largest)</div>
                     <div style="margin-bottom: 13px;">Circle 2</div>
                     <div style="margin-bottom: 13px;">Circle 3</div>
@@ -35,7 +35,7 @@
                         40000 steps of the image will<br>be drawn.
                     </div>
                 </div>
-                <div class="back_button" style="position: absolute; top: 330px; border: 2px solid black; color: black;" onclick=run_custom()>RUN</div>
+                <div class="back_button" id="run_button" onclick=run_custom()>RUN</div>
             </div>
         </div>
         <div class="description_title">Spirograph Fractals</div>

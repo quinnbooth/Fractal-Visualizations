@@ -16,14 +16,14 @@
             from the starting point z = 0, it belongs to the Mandelbrot set.
         </div>
         <div class="control_panel">
-            <div style="position: absolute; top: 20px; width: 500px; font-size: 1.3em; text-align: center; color: antiquewhite; overflow: auto;">
+            <div id="zoom_label">
                 Click the fractal to ZOOM!
             </div>
-            <div style="position: absolute; top: 60px; width: 400px; font-size: 1.1em; text-align: center; color: antiquewhite; overflow: auto;">
+            <div id="zoom_description">
                 All the points will be recalculated, so you can zoom in infinitely without loss of quality, unlike a PNG.
             </div>
-            <div class="back_button" style="left: 10px; top: 10px; width: 114px; height: 35px; font-size: 1.1em;" onclick=reset_fractal()>Reset Fractal</div>
-            <div style="color: white; position: absolute; top: 65px; left: 15px; width: 50px; font-size: 1.3em; text-align: center;">Color:</div>
+            <div class="back_button" id="reset_fractal" onclick=reset_fractal()>Reset Fractal</div>
+            <div id="color_label">Color:</div>
             <input type="color" id="color_picker" value="#C800FF" style="position: absolute; top: 64px; left: 80px;">
         </div>
         <script defer src="./mandelbrot.js"></script>
