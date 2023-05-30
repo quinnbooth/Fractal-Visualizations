@@ -24,8 +24,16 @@
                     <div class="option" onclick=select_dragon()>Dragon Curve</div>
                 </div>
             </div>
+            <div class="settings_div">
+                <div id="complexity_label">Complexity: </div>
+                <div id="angle_label"> Angle: </div>
+                <input class="slider" type="range" id="complexity_slider" min="1" max="5" step="1" value="5">
+                <input class="slider" type="range" id="angle_slider" min="-180" max="180" step="5" value="-25">
+                <div id="complexity_value">5</div>
+                <div id="angle_value">-25°</div>
+            </div>
             <div id="color_label3">Color:</div>
-            <input type="color" id="color_picker" value="#FFAE00" style="position: absolute; top: 64px; left: 80px;">
+            <input type="color" id="color_picker" value="#00FF00" style="position: absolute; top: 64px; left: 80px;">
         </div>
         <script defer src="./tree.js"></script>
     </body>

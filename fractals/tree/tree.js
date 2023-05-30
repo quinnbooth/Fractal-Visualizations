@@ -181,6 +181,10 @@ const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const back_button = document.getElementById("back_button");
 const description = document.getElementById("description");
 const color_picker = document.getElementById("color_picker");
+const complexity_slider = document.getElementById("complexity_slider");
+const complexity_value = document.getElementById("complexity_value");
+const angle_slider = document.getElementById("angle_slider");
+const angle_value = document.getElementById("angle_value");
 
 // Enable re-direct to home page
 back_button.addEventListener("click", function() {
@@ -199,6 +203,19 @@ function reset_canvas() {
 // Allow user to pick a color for the fractals
 color_picker.addEventListener('change', function(event) {
     color = event.target.value;
+    draw_system(preset, complexity, angle_step);
+});
+
+// Generate L-System based on slider inputs, maintain labels
+complexity_slider.addEventListener('input', function() {
+    complexity_value.textContent = complexity_slider.value;
+    complexity = parseInt(complexity_slider.value);
+    draw_system(preset, complexity, angle_step);
+});
+
+angle_slider.addEventListener('input', function() {
+    angle_value.textContent = angle_slider.value + "°";
+    angle_step = parseInt(angle_slider.value) * Math.PI / 180;
     draw_system(preset, complexity, angle_step);
 });
 
@@ -223,7 +240,12 @@ fit();
 function select_tree() {
     preset = "tree";
     complexity = 5;
-    angle_step = -0.45;
+    angle_step = -25 * Math.PI / 180;
+    complexity_slider.max = 5;
+    complexity_slider.value = 5;
+    complexity_value.textContent = complexity_slider.value;
+    angle_slider.value = -25;
+    angle_value.textContent = String(-25) + "°";
     draw_system(preset, complexity, angle_step);
 }
 
@@ -231,6 +253,11 @@ function select_triangle() {
     preset = "triangle";
     complexity = 5;
     angle_step = 120 * Math.PI / 180;
+    complexity_slider.max = 5;
+    complexity_slider.value = 5;
+    complexity_value.textContent = complexity_slider.value;
+    angle_slider.value = 120;
+    angle_value.textContent = String(120) + "°";
     draw_system(preset, complexity, angle_step);
 }
 
@@ -238,7 +265,13 @@ function select_dragon() {
     preset = "dragon";
     complexity = 12;
     angle_step = 90 * Math.PI / 180;
+    complexity_slider.max = 13;
+    complexity_slider.value = 12;
+    complexity_value.textContent = complexity_slider.value;
+    angle_slider.value = 90;
+    angle_value.textContent = String(90) + "°";
     draw_system(preset, complexity, angle_step);
 }
 
+// Draw opening L-System
 draw_system(preset, complexity, angle_step);

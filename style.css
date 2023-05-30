@@ -1,3 +1,26 @@
+#angle_label {
+    position: absolute;
+    top: 35px;
+    left: 5%;
+    font-size: 1.25em;
+    color: white;
+}
+
+#angle_slider {
+    position: absolute;
+    top: 37px;
+    left: 25%;
+    width: 150px;
+}
+
+#angle_value {
+    position: absolute;
+    top: 35px;
+    left: 80%;
+    font-size: 1.25em;
+    color: white;
+}
+
 .back_button {
     position: absolute;
     top: 25px;
@@ -111,6 +134,28 @@ canvas {
     left: 15px; 
     white-space: nowrap; 
     font-size: 0.8em;
+}
+
+#complexity_label {
+    position: absolute;
+    left: 8%;
+    font-size: 1.25em;
+    color: white;
+}
+
+#complexity_slider {
+    position: absolute;
+    top: 2px;
+    left: 43%;
+    width: 105px;
+}
+
+#complexity_value {
+    position: absolute;
+    top: 1px;
+    left: 83%;
+    font-size: 1.25em;
+    color: white;
 }
 
 .control_panel {
@@ -410,6 +455,14 @@ canvas {
     top: 330px; 
     border: 2px solid black; 
     color: black;
+}
+
+.settings_div {
+    position: absolute;
+    justify-content: center;
+    height: 80%;
+    width: 300px;
+    display: flex;
 }
 
 #scale_label {
