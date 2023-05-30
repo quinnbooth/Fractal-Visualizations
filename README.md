@@ -30,7 +30,7 @@ This project has been optimized for Google Chrome and Microsoft Edge.
   <tr></tr>
   <tr>
     <td>
-      <img src="./images/fern.PNG" alt="L-System Tree" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
+      <img src="./images/tree.PNG" alt="L-System Tree" style="width: 100%; max-width: 300px; height: auto; object-fit: cover;">
       <p align="center"><em>Figure 5: L-System Tree</em></p>
     </td>
   </tr>

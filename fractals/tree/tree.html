@@ -16,6 +16,16 @@
             such as fractal trees.
         </div>
         <div class="control_panel">
+            <div class="dropdown" style="top: 10px; left: 10px;">
+                <button class="dropdown_button" style="width: 120px;">PRESETS</button>
+                <div class="dropdown_list" style="width: 100px; z-index: 9999;">
+                    <div class="option" onclick=select_tree()>Fractal Tree</div>
+                    <div class="option" onclick=select_triangle()>Sierpinski</div>
+                    <div class="option" onclick=select_dragon()>Dragon Curve</div>
+                </div>
+            </div>
+            <div id="color_label3">Color:</div>
+            <input type="color" id="color_picker" value="#FFAE00" style="position: absolute; top: 64px; left: 80px;">
         </div>
         <script defer src="./tree.js"></script>
     </body>

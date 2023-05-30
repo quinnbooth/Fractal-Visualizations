@@ -154,6 +154,16 @@ canvas {
     text-align: center;
 }
 
+#color_label4 {
+    color: white; 
+    position: absolute; 
+    top: 9px; 
+    left: 145px; 
+    width: 50px; 
+    font-size: 1.3em; 
+    text-align: center;
+}
+
 #color_picker {
     position: absolute;
     top: 10px;

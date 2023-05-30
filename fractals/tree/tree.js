@@ -3,6 +3,11 @@
 // Author: Quinn Booth
 //
 
+var preset = "tree";
+var complexity = 5;
+var angle_step = -0.45;
+var color = "lime";
+
 // Pre-defined rules and alphabet for L-System Tree
 // NOTE: +, -, [, and ] are reserved for specific operations listed below
 
@@ -13,8 +18,8 @@ const tree_rules = {
 };
 
 // Sierpinski Triangle
-const sierpinski_axiom = "F-G-G";
-const sierpinski_rules = {
+const triangle_axiom = "F-G-G";
+const triangle_rules = {
     "F": "F-G+F+G-F",
     "G": "GG"
 };
@@ -29,40 +34,26 @@ const dragon_rules = {
 // Plot an L-System with given specifications
 function draw_system(type, steps, angle_step) {
 
-    let axiom = tree_axiom;
-    let rules = tree_rules;
-
-    if (type == "triangle") {
-        axiom = sierpinski_axiom;
-        rules = sierpinski_rules;
-    } else if (type == "dragon") {
-        axiom = dragon_axiom;
-        rules = dragon_rules;
-    }
-
-    const string = l_system(axiom, rules, steps);
-
     let saved_positions = [];
     let angle = -Math.PI / 2;
-    let length = canvas.height / 65;
 
-    let x = canvas.width / 2;
-    let y = canvas.height - 25;
-
-    ctx.strokeStyle = 'lime';
+    // Get preset's axiom and rules
+    const [axiom, rules] = get_preset(type);
 
     // Judge how big the drawing should be based on its complexity and type
-    if (steps == 5) {
-        length = length / 2;
-        ctx.lineWidth = 0.25;
-    } else if (steps >= 6) {
-        length = length / 4;
-        ctx.lineWidth = 0.25;
-    } else {
-        ctx.lineWidth = 2;
-    }
+    const [orig_x, orig_y, length, width] = get_specs(type, steps);
+    let x = orig_x;
+    let y = orig_y;
+    ctx.lineWidth = width;
+    ctx.strokeStyle = color;
 
-    // Center drawing
+    console.log(orig_x, orig_y, length, width);
+
+    // Perform the L-System iterative algorithm
+    const string = l_system(axiom, rules, steps);
+
+    // Clear canvas and center drawing
+    reset_canvas();
     ctx.moveTo(x, y);
 
     // Go symbol by symbol to determine what to draw and where
@@ -80,12 +71,12 @@ function draw_system(type, steps, angle_step) {
 
             angle -= angle_step;
 
-        // [ means save position
+        // [ means save position (push onto stack)
         } else if (symbol == "[") {
 
             saved_positions.push([x, y, angle]);
 
-        // ] means return to last saved position
+        // ] means return to last saved position (pop off of stack)
         } else if (symbol == "]") {
 
             const return_to = saved_positions.pop();
@@ -139,8 +130,48 @@ function step(string, rules) {
     return next_string;
 }
 
+// Get proper axiom and rules based on preset
+function get_preset(type) {
+    if (type == "tree") {
+        return [tree_axiom, tree_rules];
+    } else if (type == "triangle") {
+        return [triangle_axiom, triangle_rules];
+    } else {
+        return [dragon_axiom, dragon_rules];
+    }
+}
+
 // Determine sizing of drawing based on steps and type
-function get_size(type, steps) {
+function get_specs(type, steps) {
+
+    let length = 0;
+    let width = 1;
+    let x = canvas.width / 2;
+    let y = 0
+
+    if (type == "tree") {
+        length = canvas.height / 65;
+        y = canvas.height - 25;
+    } else if (type == "triangle") {
+        length = canvas.height / 30;
+        y = canvas.height - 25;
+    } else {
+        width = width * 3;
+        length = canvas.height / (3 * steps);
+        y = 120;
+    }
+
+    if (steps < 5) {
+        width = width * 2;
+    } else if (steps == 5) {
+        length = length / 2;
+        width = width * 0.5;
+    } else {
+        length = length / 4;
+        width = width * 0.25;
+    }
+
+    return [x, y, length, width];
 
 }
 
@@ -149,6 +180,7 @@ const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d", { willReadFrequently: true });
 const back_button = document.getElementById("back_button");
 const description = document.getElementById("description");
+const color_picker = document.getElementById("color_picker");
 
 // Enable re-direct to home page
 back_button.addEventListener("click", function() {
@@ -163,6 +195,12 @@ function reset_canvas() {
     ctx.fillStyle = "#0E0B16";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 }
+
+// Allow user to pick a color for the fractals
+color_picker.addEventListener('change', function(event) {
+    color = event.target.value;
+    draw_system(preset, complexity, angle_step);
+});
 
 // Make everything fit on screen
 function fit() {
@@ -181,13 +219,26 @@ function fit() {
 // Resize everything upon launch and plot initial fractal
 fit();
 
-// Draw initial L-System Tree
-// draw_system(axiom, rules, 5, -0.45);  // For Fractal Tree
+// Selecting user preset
+function select_tree() {
+    preset = "tree";
+    complexity = 5;
+    angle_step = -0.45;
+    draw_system(preset, complexity, angle_step);
+}
 
-//const degrees = 120;
-//const radians = degrees * Math.PI / 180;
-//draw_system(axiom, rules, 7, radians);  // For Sierpinski Triangle
+function select_triangle() {
+    preset = "triangle";
+    complexity = 5;
+    angle_step = 120 * Math.PI / 180;
+    draw_system(preset, complexity, angle_step);
+}
 
-const degrees = 90;
-const radians = degrees * Math.PI / 180;
-draw_system("tree", 5, -0.45);
+function select_dragon() {
+    preset = "dragon";
+    complexity = 12;
+    angle_step = 90 * Math.PI / 180;
+    draw_system(preset, complexity, angle_step);
+}
+
+draw_system(preset, complexity, angle_step);
