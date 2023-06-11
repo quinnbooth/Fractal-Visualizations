@@ -47,8 +47,6 @@ function draw_system(type, steps, angle_step) {
     ctx.lineWidth = width;
     ctx.strokeStyle = color;
 
-    console.log(orig_x, orig_y, length, width);
-
     // Perform the L-System iterative algorithm
     const string = l_system(axiom, rules, steps);
 
